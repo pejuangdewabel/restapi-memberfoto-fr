@@ -6,7 +6,7 @@ class ResponseFormatter
 {
     protected static $response = [
         'meta' => [
-            'code'      => 201,
+            'code'      => 202,
             'status'    => 'success',
             'message'   => null
         ]

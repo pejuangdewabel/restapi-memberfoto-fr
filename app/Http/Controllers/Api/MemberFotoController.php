@@ -28,30 +28,36 @@ class MemberFotoController extends Controller
      */
     public function store(Request $request)
     {
-        $rules = [
-            'foto' => 'required|file|max:64',
-        ];
+        $token = 'FR23W7AN9H3K5RP8M4N6';
 
-        $validator = Validator::make($request->all(), $rules);
+        if ($request->token ==  $token) {
+            $rules = [
+                'foto' => 'required|file|max:64',
+            ];
 
-        if ($validator->fails()) {
-            return ResponseFormatter::error('The uploaded file exceeds the maximum allowed size', 422);
-        }
+            $validator = Validator::make($request->all(), $rules);
 
-        if ($request->id_member and $request->foto) {
-            $data = MemberFoto::where('idMember', $request->id_member)->first();
-            if ($data) {
-                $updateData = array(
-                    'foto'      =>  file_get_contents($request->file('foto')),
-                );
-                MemberFoto::where('idMember', $request->id_member)->update($updateData);
-                return ResponseFormatter::success('Created');
+            if ($validator->fails()) {
+                return ResponseFormatter::error('The uploaded file exceeds the maximum allowed size', 422);
+            }
+
+            if ($request->id_member and $request->foto) {
+                $data = MemberFoto::where('idMember', $request->id_member)->first();
+                if ($data) {
+                    $updateData = array(
+                        'foto'      =>  file_get_contents($request->file('foto')),
+                    );
+                    MemberFoto::where('idMember', $request->id_member)->update($updateData);
+                    return ResponseFormatter::success('Accepted');
+                } else {
+                    return ResponseFormatter::error('Data Not Found', 404);
+                }
             } else {
-                return ResponseFormatter::error('Data Not Found', 404);
+                return ResponseFormatter::error('Bad Request', 400);
+                // Kode ini menunjukkan bahwa server tidak memahami permintaan dikarenakan syntax yang invalid.
             }
         } else {
-            return ResponseFormatter::error('Bad Request', 400);
-            // Kode ini menunjukkan bahwa server tidak memahami permintaan dikarenakan syntax yang invalid.
+            return ResponseFormatter::error('Unauthorized', 401);
         }
     }
 
