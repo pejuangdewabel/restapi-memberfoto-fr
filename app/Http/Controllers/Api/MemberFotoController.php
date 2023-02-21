@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Model\MemberFoto;
 use Facade\FlareClient\Http\Response;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 
 class MemberFotoController extends Controller
@@ -30,7 +32,9 @@ class MemberFotoController extends Controller
     {
         $token = 'FR23W7AN9H3K5RP8M4N6';
 
-        if ($request->token ==  $token) {
+        $authorization = $request->header('Authorization', '');
+
+        if ($authorization ==  $token) {
             $rules = [
                 'foto' => 'required|file|max:64',
             ];
@@ -93,5 +97,40 @@ class MemberFotoController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getFoto($authorization, $id)
+    {
+        $token = 'FR23W7AN9H3K5RP8M4N6';
+
+        try {
+            $authorizationDecrypt = Crypt::decrypt($authorization);
+            $idDecrypt = Crypt::decrypt($id);
+            if ($idDecrypt and $authorizationDecrypt == $token) {
+                $photo = MemberFoto::where('idMember', $idDecrypt)->first();
+
+                if ($photo) {
+                    return response($photo->foto, 200)->header('Content-Type', 'image/jpeg');
+                } else {
+                    return response()->json([
+                        'code'      => 404,
+                        'status'    => false,
+                        'message'   => 'Data Not Found'
+                    ]);
+                }
+            } else {
+                return response()->json([
+                    'code'      => 401,
+                    'status'    => false,
+                    'message'   => 'Unauthorized'
+                ]);
+            }
+        } catch (DecryptException $e) {
+            return response()->json([
+                'code'      => 404,
+                'status'    => false,
+                'message'   => 'Data Not Found'
+            ]);
+        }
     }
 }
