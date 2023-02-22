@@ -41,7 +41,8 @@ class MemberDataController extends Controller
     {
         $token = "FR23W7AN9H3K5RP8M4N6";
 
-        $authorization = $request->header('Authorization', '');
+
+        $authorization = $request->authorization;
 
         if ($request->idMember and $authorization == $token) {
             $data = MemberData::with([

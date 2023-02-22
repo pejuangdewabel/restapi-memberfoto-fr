@@ -32,7 +32,7 @@ class MemberFotoController extends Controller
     {
         $token = 'FR23W7AN9H3K5RP8M4N6';
 
-        $authorization = $request->header('Authorization', '');
+        $authorization = $request->authorization;
 
         if ($authorization ==  $token) {
             $rules = [
