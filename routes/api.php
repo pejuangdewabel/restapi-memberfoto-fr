@@ -22,4 +22,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::resource('member-foto', 'Api\MemberFotoController');
 Route::resource('member-data', 'Api\MemberDataController');
+Route::resource('member-document', 'Api\MemberDocumentController');
 Route::get('get-foto/{authorization}/{id}', 'Api\MemberFotoController@getFoto')->name('api-getFoto');
