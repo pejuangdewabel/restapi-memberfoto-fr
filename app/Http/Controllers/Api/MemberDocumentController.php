@@ -88,9 +88,9 @@ class MemberDocumentController extends Controller
      */
     public function show($id)
     {
-        $data = MemberDocument::where('idMember', $id)->first();
-        return response($data->document)
-            ->header('Content-Type', 'application/pdf');
+        // $data = MemberDocument::where('idMember', $id)->first();
+        // return response($data->document)
+        //     ->header('Content-Type', 'application/pdf');
     }
 
     /**
