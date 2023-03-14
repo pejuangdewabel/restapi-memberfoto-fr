@@ -45,7 +45,7 @@ class MemberDocumentController extends Controller
 
         if ($authorization ==  $token) {
             $rules = [
-                'document' => 'required|file|max:64',
+                'document' => 'required|file|max:3000',
             ];
             $validator = Validator::make($request->all(), $rules);
 
